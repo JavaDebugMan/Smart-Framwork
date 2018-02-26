@@ -61,7 +61,7 @@ public class CustomerService {
      * @return
      */
     public boolean updateCutomer(long id, Map<String, Object> filedMap) {
-        return false;
+        return DataBaseHelper.updateEntity(Customer.class, id, filedMap);
     }
 
     /**
@@ -71,7 +71,7 @@ public class CustomerService {
      * @return
      */
     public boolean deleteCustomer(long id) {
-        return false;
+        return DataBaseHelper.deleteEntity(Customer.class, id);
 
     }
 

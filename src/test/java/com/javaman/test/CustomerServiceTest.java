@@ -6,7 +6,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pengzhe
@@ -33,6 +35,35 @@ public class CustomerServiceTest {
         List<Customer> customerList = customerService.getCustomerList();
         System.out.println(customerList);
         Assert.assertEquals(2, customerList.size());
+    }
+
+    @Test
+    public void createCustomerTest() {
+        Map<String, Object> fieldMap = new HashMap<>();
+        fieldMap.put("name", "customer11");
+        fieldMap.put("contact", "Hohn");
+        fieldMap.put("telephone", "12214214");
+        boolean cutomer = customerService.createCutomer(fieldMap);
+        System.out.println(cutomer);
+    }
+
+    @Test
+    public void updateCustomerTest() {
+        long id = 1;
+        Map<String, Object> fieldMap = new HashMap<>();
+        fieldMap.put("contact", "Eric");
+        boolean b = customerService.updateCutomer(id, fieldMap);
+        System.out.println(b);
+    }
+
+    @Test
+    public void deleteCustomer() {
+        long id = 4;
+        boolean b = customerService.deleteCustomer(id);
+        System.out.println(b);
+
 
     }
+
+
 }

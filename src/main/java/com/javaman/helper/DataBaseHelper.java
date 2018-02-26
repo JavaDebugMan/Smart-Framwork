@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -77,7 +78,7 @@ public class DataBaseHelper {
         return connection;
     }
 
-/*    *//**
+    /*    *//**
      * 关闭数据库连接
      *//*
     public static void closeConnection() {
@@ -185,7 +186,7 @@ public class DataBaseHelper {
             LOGGER.error("can not insert entity: fieldMap is empty");
             return false;
         }
-        String sql = "INSERT INTO CUSTOMER";
+        String sql = "INSERT INTO customer";
         StringBuilder columns = new StringBuilder("(");
         StringBuilder values = new StringBuilder("(");
         for (String fieldName : fieldMap.keySet()) {
@@ -198,6 +199,39 @@ public class DataBaseHelper {
 
         Object[] params = fieldMap.values().toArray();
         return executeUpdate(sql, params) == 1;
+    }
+
+    /**
+     * 更新实体
+     *
+     * @param entityClass
+     * @param id
+     * @param fieldMap
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean updateEntity(Class<T> entityClass, long id, Map<String, Object> fieldMap) {
+        if (CollectionUtil.isEmpty(fieldMap)) {
+            LOGGER.error("can not update entity:fieldMap is empty");
+            return false;
+        }
+        String sql = "UPDATE customer SET ";
+        StringBuilder columns = new StringBuilder();
+        for (String fieldName : fieldMap.keySet()) {
+            columns.append(fieldName).append("=?, ");
+        }
+        sql += columns.substring(0, columns.lastIndexOf(", ")) + "WHERE id=?";
+
+        List<Object> paramList = new ArrayList<>();
+        paramList.addAll(fieldMap.values());
+        paramList.add(id);
+        Object[] params = paramList.toArray();
+        return executeUpdate(sql, params) == 1;
+    }
+
+    public static <T> boolean deleteEntity(Class<T> entityClass, long id) {
+        String sql = "DELETE FROM customer WHERE id=?";
+        return executeUpdate(sql, id) == 1;
     }
 
 }
