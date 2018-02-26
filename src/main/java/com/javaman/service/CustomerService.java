@@ -1,5 +1,6 @@
 package com.javaman.service;
 
+import com.javaman.helper.DataBaseHelper;
 import com.javaman.model.Customer;
 import com.javaman.util.PropsUtil;
 import org.slf4j.Logger;
@@ -21,24 +22,6 @@ public class CustomerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
-    private static final String DRIVER;
-    private static final String URL;
-    private static final String USERNAME;
-    private static final String PASSWORD;
-
-    static {
-        Properties config = PropsUtil.loadProps("db.properties");
-        DRIVER = config.getProperty("jdbc.driver");
-        URL = config.getProperty("jdbc.url");
-        USERNAME = config.getProperty("jdbc.username");
-        PASSWORD = config.getProperty("jdbc.password");
-
-        try {
-            Class.forName(DRIVER);
-        } catch (ClassNotFoundException e) {
-            LOGGER.error("can not load jdbc driver", e);
-        }
-    }
 
     /**
      * 获取客户列表
@@ -50,7 +33,7 @@ public class CustomerService {
         try {
             List<Customer> list = new ArrayList<>();
             String sql = "SELECT * FROM customer";
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            connection = DataBaseHelper.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -69,13 +52,7 @@ public class CustomerService {
         catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    LOGGER.error("close connection failure", e);
-                }
-            }
+            DataBaseHelper.closeConnection(connection);
         }
         return null;
     }
