@@ -41,7 +41,7 @@ public class CustomerServiceTest {
         fieldMap.put("name", "customer11");
         fieldMap.put("contact", "Hohn");
         fieldMap.put("telephone", "12214214");
-        boolean result = customerService.createCutomer(fieldMap);
+        boolean result = customerService.createCustomer(fieldMap);
         Assert.assertTrue(result);
     }
 
@@ -50,7 +50,7 @@ public class CustomerServiceTest {
         long id = 1;
         Map<String, Object> fieldMap = new HashMap<>();
         fieldMap.put("contact", "Eric");
-        boolean result = customerService.updateCutomer(id, fieldMap);
+        boolean result = customerService.updateCustomer(id, fieldMap);
         Assert.assertTrue(result);
     }
 

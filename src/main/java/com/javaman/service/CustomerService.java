@@ -49,7 +49,7 @@ public class CustomerService {
      * @param fieldMap
      * @return
      */
-    public boolean createCutomer(Map<String, Object> fieldMap) {
+    public boolean createCustomer(Map<String, Object> fieldMap) {
         return DataBaseHelper.insertEntity(Customer.class, fieldMap);
     }
 
@@ -60,7 +60,7 @@ public class CustomerService {
      * @param filedMap
      * @return
      */
-    public boolean updateCutomer(long id, Map<String, Object> filedMap) {
+    public boolean updateCustomer(long id, Map<String, Object> filedMap) {
         return DataBaseHelper.updateEntity(Customer.class, id, filedMap);
     }
 
