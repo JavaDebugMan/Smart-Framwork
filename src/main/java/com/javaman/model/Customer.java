@@ -7,12 +7,29 @@ package com.javaman.model;
  */
 
 public class Customer {
-
+    /**
+     * 自增主键
+     */
     private long id;
+    /**
+     * 用户名
+     */
     private String name;
+    /**
+     * 联系人
+     */
     private String contact;
+    /**
+     * 电话号码
+     */
     private String telephone;
+    /**
+     * 邮箱
+     */
     private String email;
+    /**
+     * 备注
+     */
     private String remark;
 
     public long getId() {
