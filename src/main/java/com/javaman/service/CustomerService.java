@@ -50,7 +50,7 @@ public class CustomerService {
      * @return
      */
     public boolean createCutomer(Map<String, Object> fieldMap) {
-        return false;
+        return DataBaseHelper.insertEntity(Customer.class, fieldMap);
     }
 
     /**
