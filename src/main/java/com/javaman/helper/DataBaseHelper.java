@@ -3,6 +3,7 @@ package com.javaman.helper;
 import com.javaman.service.CustomerService;
 import com.javaman.util.PropsUtil;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +81,15 @@ public class DataBaseHelper {
         }
     }
 
+    /**
+     * 查询实体列表
+     *
+     * @param entityClass
+     * @param sql
+     * @param params
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Object... params) {
         List<T> entityList;
         try {
@@ -92,6 +102,28 @@ public class DataBaseHelper {
             closeConnection();
         }
         return entityList;
+    }
 
+    /**
+     * 查询实体
+     *
+     * @param entityClass
+     * @param sql
+     * @param params
+     * @param <T>
+     * @return
+     */
+    public static <T> T queryEntity(Class<T> entityClass, String sql, Object... params) {
+        T entity;
+        Connection connection = getConnection();
+        try {
+            entity = QUERY_RUNNER.query(connection, sql, new BeanHandler<T>(entityClass));
+        } catch (SQLException e) {
+            LOGGER.error("query entity failure", e);
+            throw new RuntimeException(e);
+        } finally {
+            closeConnection();
+        }
+        return entity;
     }
 }
