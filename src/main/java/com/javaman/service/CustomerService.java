@@ -31,30 +31,12 @@ public class CustomerService {
     public List<Customer> getCustomerList() {
         Connection connection = null;
         try {
-            List<Customer> list = new ArrayList<>();
             String sql = "SELECT * FROM customer";
             connection = DataBaseHelper.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setId(resultSet.getLong("id"));
-                customer.setName(resultSet.getString("name"));
-                customer.setContact(resultSet.getString("contact"));
-                customer.setTelephone(resultSet.getString("telephone"));
-                customer.setEmail(resultSet.getString("email"));
-                customer.setRemark(resultSet.getString("remark"));
-                list.add(customer);
-            }
-            return list;
-        }
-
-        catch (SQLException e) {
-            e.printStackTrace();
+            return DataBaseHelper.queryEntityList(Customer.class, sql, connection);
         } finally {
             DataBaseHelper.closeConnection(connection);
         }
-        return null;
     }
 
     /**

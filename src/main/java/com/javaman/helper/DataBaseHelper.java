@@ -2,12 +2,15 @@ package com.javaman.helper;
 
 import com.javaman.service.CustomerService;
 import com.javaman.util.PropsUtil;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -18,9 +21,9 @@ import java.util.Properties;
 
 public class DataBaseHelper {
 
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);
 
+    private static final QueryRunner QUERY_RUNNER = new QueryRunner();
     private static final String DRIVER;
     private static final String URL;
     private static final String USERNAME;
@@ -67,8 +70,18 @@ public class DataBaseHelper {
             } catch (SQLException e) {
                 LOGGER.error("close connection failure", e);
             }
-
         }
+    }
+
+    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Connection connection,Object... params) {
+        List<T> entityList;
+        try {
+            entityList = QUERY_RUNNER.query(connection, sql, new BeanListHandler<T>(entityClass), params);
+        } catch (SQLException e) {
+            LOGGER.error("query entity list failure",e);
+            throw new RuntimeException(e);
+        }
+        return entityList;
 
     }
 }
