@@ -31,6 +31,7 @@ public class CustomerServiceTest {
     @Test
     public void getCustomerListTest() throws Exception {
         List<Customer> customerList = customerService.getCustomerList();
+        System.out.println(customerList);
         Assert.assertEquals(2, customerList.size());
 
     }
