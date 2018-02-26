@@ -29,6 +29,8 @@ public class DataBaseHelper {
     private static final String USERNAME;
     private static final String PASSWORD;
 
+    private static final ThreadLocal<Connection> CONNECTION_THREAD_LOCAL = new ThreadLocal<Connection>();
+
     static {
         Properties config = PropsUtil.loadProps("db.properties");
         DRIVER = config.getProperty("jdbc.driver");
@@ -49,37 +51,45 @@ public class DataBaseHelper {
      * @return
      */
     public static Connection getConnection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            LOGGER.error("get connection failure", e);
+        Connection connection = CONNECTION_THREAD_LOCAL.get();
+        if (connection == null) {
+            try {
+                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            } catch (SQLException e) {
+                LOGGER.error("get connection failure", e);
+            } finally {
+                CONNECTION_THREAD_LOCAL.set(connection);
+            }
         }
         return connection;
     }
 
     /**
      * 关闭数据库连接
-     *
-     * @param connection
      */
-    public static void closeConnection(Connection connection) {
-        if (connection != null) {
+    public static void closeConnection() {
+        Connection conn = CONNECTION_THREAD_LOCAL.get();
+        if (conn != null) {
             try {
-                connection.close();
+                conn.close();
             } catch (SQLException e) {
                 LOGGER.error("close connection failure", e);
+            } finally {
+                CONNECTION_THREAD_LOCAL.remove();
             }
         }
     }
 
-    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Connection connection,Object... params) {
+    public static <T> List<T> queryEntityList(Class<T> entityClass, String sql, Object... params) {
         List<T> entityList;
         try {
-            entityList = QUERY_RUNNER.query(connection, sql, new BeanListHandler<T>(entityClass), params);
+            Connection conn = getConnection();
+            entityList = QUERY_RUNNER.query(conn, sql, new BeanListHandler<T>(entityClass), params);
         } catch (SQLException e) {
-            LOGGER.error("query entity list failure",e);
+            LOGGER.error("query entity list failure", e);
             throw new RuntimeException(e);
+        } finally {
+            closeConnection();
         }
         return entityList;
 
