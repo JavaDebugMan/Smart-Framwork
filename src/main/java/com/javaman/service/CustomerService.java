@@ -2,22 +2,19 @@ package com.javaman.service;
 
 import com.javaman.helper.DataBaseHelper;
 import com.javaman.model.Customer;
-import com.javaman.util.PropsUtil;
+import com.javaman.smart.framwork.annotation.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * @author pengzhe
  * @date 2018/2/26 17:22
  * @description
  */
-
+@Service
 public class CustomerService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerService.class);

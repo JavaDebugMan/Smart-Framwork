@@ -16,7 +16,6 @@ import java.util.List;
  * @date 2018/2/26 17:19
  * @description
  */
-@WebServlet("/customer")
 public class CustomerServlet extends HttpServlet {
 
     private CustomerService customerService;
